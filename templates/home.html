@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Shubham Singh — Game Developer &amp; Backend Engineer</title>
+<meta name="description" content="Portfolio of Shubham Singh, Computer Science student building games in Godot and backend systems with Django and Node.js." />
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          base: '#0B0E14',
+          surface: '#10141C',
+          surface2: '#161B26',
+          line: '#232A38',
+          ink: '#E6E9F0',
+          mute: '#8B93A7',
+          indigo: {
+            DEFAULT: '#7C9EFF',
+            dim: '#5A75C2',
+          },
+          emerald: {
+            DEFAULT: '#52E3A4',
+            dim: '#3BAE80',
+          },
+          amber: {
+            DEFAULT: '#E3A052',
+            dim: '#B97F3E',
+          },
+        },
+        fontFamily: {
+          display: ['"Space Grotesk"', 'sans-serif'],
+          body: ['"Inter"', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'monospace'],
+        },
+      },
+    },
+  };
+</script>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- Framer Motion (via UMD-compatible build is not available; using lightweight scroll-reveal instead, see custom JS below) -->
+
+<style>
+  html { background-color: #0B0E14; }
+  body {
+    background-color: #0B0E14;
+    font-family: 'Inter', sans-serif;
+    color: #E6E9F0;
+  }
+  ::selection { background: #7C9EFF; color: #0B0E14; }
+
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: #0B0E14; }
+  ::-webkit-scrollbar-thumb { background: #232A38; border-radius: 6px; }
+  ::-webkit-scrollbar-thumb:hover { background: #2e3850; }
+
+  /* Reduced motion respect */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s cubic-bezier(.2,.7,.3,1), transform 0.7s cubic-bezier(.2,.7,.3,1);
+  }
+  .reveal.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.08s; }
+  .reveal-delay-2 { transition-delay: 0.16s; }
+  .reveal-delay-3 { transition-delay: 0.24s; }
+  .reveal-delay-4 { transition-delay: 0.32s; }
+
+  /* Grid backdrop */
+  .grid-backdrop {
+    background-image:
+      linear-gradient(to right, rgba(124,158,255,0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(124,158,255,0.05) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+
+  .noise-fade {
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 40%, transparent 100%);
+            mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 40%, transparent 100%);
+  }
+
+  .glow-indigo { box-shadow: 0 0 0 1px rgba(124,158,255,0.15), 0 0 40px -10px rgba(124,158,255,0.25); }
+
+  .card-hover { transition: transform 0.35s cubic-bezier(.2,.7,.3,1), border-color 0.35s ease, box-shadow 0.35s ease; }
+  .card-hover:hover { transform: translateY(-4px); border-color: rgba(124,158,255,0.4); box-shadow: 0 12px 30px -12px rgba(0,0,0,0.6); }
+
+  .blink-cursor {
+    display: inline-block;
+    width: 8px;
+    height: 1.05em;
+    background: #52E3A4;
+    margin-left: 4px;
+    vertical-align: text-bottom;
+    animation: blink 1.1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .xp-fill {
+    transition: width 1.4s cubic-bezier(.2,.8,.2,1);
+  }
+
+  .nav-link { position: relative; }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: -4px;
+    height: 1px;
+    background: #7C9EFF;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+  .nav-link:hover::after { transform: scaleX(1); }
+
+  .timeline-line {
+    background: linear-gradient(to bottom, #52E3A4 0%, #52E3A4 33%, #E3A052 33%, #E3A052 66%, #232A38 66%, #232A38 100%);
+  }
+
+  .floating { animation: floatY 6s ease-in-out infinite; }
+  @keyframes floatY { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+  .parallax-slow { animation: floatY 9s ease-in-out infinite; }
+
+  textarea:focus, input:focus { outline: none; }
+
+  .skip-link:focus {
+    transform: translateY(0%);
+  }
+</style>
+</head>
+
+<body class="antialiased selection:bg-indigo selection:text-base">
+
+<a href="#main" class="skip-link fixed top-0 left-0 -translate-y-full focus:translate-y-0 transition-transform bg-indigo text-base font-mono text-sm px-4 py-2 z-[100]">Skip to content</a>
+
+<!-- ============ NAV ============ -->
+<header class="fixed top-0 inset-x-0 z-50 backdrop-blur-md bg-base/70 border-b border-line/70">
+  <nav class="max-w-6xl mx-auto px-6 md:px-8 h-16 flex items-center justify-between">
+    <a href="#hero" class="font-display font-semibold text-lg tracking-tight text-ink flex items-center gap-2">
+      <span class="text-emerald">&gt;</span> shubham<span class="text-mute">.dev</span>
+    </a>
+    <div class="hidden md:flex items-center gap-8 font-mono text-sm text-mute">
+      <a href="#about" class="nav-link hover:text-ink transition-colors">about</a>
+      <a href="#skills" class="nav-link hover:text-ink transition-colors">skills</a>
+      <a href="#projects" class="nav-link hover:text-ink transition-colors">projects</a>
+      <a href="#journey" class="nav-link hover:text-ink transition-colors">journey</a>
+      <a href="#devlog" class="nav-link hover:text-ink transition-colors">devlog</a>
+      <a href="#contact" class="nav-link hover:text-ink transition-colors">contact</a>
+    </div>
+    <a href="#contact" class="hidden md:inline-flex items-center gap-2 text-sm font-mono px-4 py-2 border border-indigo/40 text-indigo hover:bg-indigo hover:text-base transition-colors rounded">
+      let's talk
+    </a>
+    <!-- mobile menu button -->
+    <button id="menuBtn" class="md:hidden text-ink p-2" aria-label="Toggle menu" aria-expanded="false">
+      <svg id="menuIconOpen" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16" /></svg>
+      <svg id="menuIconClose" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" /></svg>
+    </button>
+  </nav>
+  <!-- mobile menu -->
+  <div id="mobileMenu" class="md:hidden hidden border-t border-line bg-base/95 backdrop-blur-md">
+    <div class="flex flex-col px-6 py-4 gap-4 font-mono text-sm text-mute">
+      <a href="#about" class="mobile-link hover:text-ink">about</a>
+      <a href="#skills" class="mobile-link hover:text-ink">skills</a>
+      <a href="#projects" class="mobile-link hover:text-ink">projects</a>
+      <a href="#journey" class="mobile-link hover:text-ink">journey</a>
+      <a href="#devlog" class="mobile-link hover:text-ink">devlog</a>
+      <a href="#contact" class="mobile-link hover:text-ink">contact</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============ HERO ============ -->
+<section id="hero" class="relative pt-32 pb-24 md:pt-44 md:pb-32 overflow-hidden grid-backdrop">
+  <div class="absolute inset-0 noise-fade pointer-events-none"></div>
+  <div class="absolute -top-24 right-0 w-[480px] h-[480px] bg-indigo/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+  <div class="relative max-w-6xl mx-auto px-6 md:px-8 grid md:grid-cols-[1.15fr_0.85fr] gap-16 items-center">
+    <div>
+      <div class="reveal in-view inline-flex items-center gap-2 font-mono text-xs text-emerald border border-emerald/30 bg-emerald/5 rounded-full px-3 py-1 mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald animate-pulse"></span>
+        currently in dev — 6th semester
+      </div>
+
+      <h1 class="reveal in-view reveal-delay-1 font-display font-semibold text-4xl sm:text-5xl lg:text-6xl leading-[1.08] tracking-tight text-ink">
+        Game Developer<br/>
+        <span class="text-mute">&amp;</span> Backend Engineer
+      </h1>
+
+      <p class="reveal in-view reveal-delay-2 mt-6 text-lg text-mute max-w-xl leading-relaxed">
+        Building interactive worlds with <span class="text-ink font-medium">Godot</span> and scalable systems with
+        <span class="text-ink font-medium">Django</span> and <span class="text-ink font-medium">Node.js</span>.
+        Computer Science student, learning in public, shipping in progress.
+      </p>
+
+      <div class="reveal in-view reveal-delay-3 mt-9 flex flex-wrap items-center gap-3">
+        <a href="#projects" class="inline-flex items-center gap-2 bg-indigo text-base font-mono text-sm font-medium px-5 py-3 rounded hover:bg-indigo-dim transition-colors glow-indigo">
+          View Projects
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+        </a>
+        <a href="https://github.com/" target="_blank" rel="noopener" class="inline-flex items-center gap-2 border border-line text-ink font-mono text-sm px-5 py-3 rounded hover:border-indigo/50 hover:text-indigo transition-colors">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.69 1.25 3.34.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.04 11.04 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.24 2.76.12 3.05.74.8 1.18 1.83 1.18 3.09 0 4.42-2.69 5.39-5.26 5.68.42.36.78 1.08.78 2.18 0 1.57-.01 2.84-.01 3.23 0 .31.21.66.79.55C20.71 21.38 24 17.07 24 12c0-6.27-5.23-11.5-12-11.5Z"/></svg>
+          GitHub
+        </a>
+        <a href="#resume" class="inline-flex items-center gap-2 text-mute font-mono text-sm px-5 py-3 rounded hover:text-ink transition-colors underline underline-offset-4 decoration-line hover:decoration-indigo">
+          Resume
+        </a>
+        <a href="#contact" class="inline-flex items-center gap-2 text-mute font-mono text-sm px-5 py-3 rounded hover:text-ink transition-colors underline underline-offset-4 decoration-line hover:decoration-indigo">
+          Contact
+        </a>
+      </div>
+    </div>
+
+    <!-- terminal / save-file card -->
+    <div class="reveal in-view reveal-delay-2 floating">
+      <div class="bg-surface border border-line rounded-xl overflow-hidden shadow-2xl">
+        <div class="flex items-center gap-1.5 px-4 py-3 border-b border-line bg-surface2">
+          <span class="w-2.5 h-2.5 rounded-full bg-[#E3625A]"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-[#E3A052]"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-[#52E3A4]"></span>
+          <span class="ml-3 font-mono text-xs text-mute">save_file.json — player_status</span>
+        </div>
+        <div class="p-5 font-mono text-[13px] leading-7">
+          <p><span class="text-mute">"player"</span><span class="text-ink">:</span> <span class="text-emerald">"Shubham Singh"</span><span class="text-ink">,</span></p>
+          <p><span class="text-mute">"class"</span><span class="text-ink">:</span> <span class="text-emerald">"Game Dev / Backend Dev"</span><span class="text-ink">,</span></p>
+          <p><span class="text-mute">"level"</span><span class="text-ink">:</span> <span class="text-amber">"B.Tech CSE — Sem 6"</span><span class="text-ink">,</span></p>
+          <p><span class="text-mute">"current_quest"</span><span class="text-ink">:</span> <span class="text-indigo">"Ship Metroidvania prototype"</span><span class="text-ink">,</span></p>
+          <p><span class="text-mute">"status"</span><span class="text-ink">:</span> <span class="text-ink">"actively building"</span><span class="blink-cursor"></span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section id="about" class="py-24 md:py-32 border-t border-line">
+  <div class="max-w-6xl mx-auto px-6 md:px-8 grid md:grid-cols-[0.4fr_0.6fr] gap-12 md:gap-16">
+    <div class="reveal">
+      <p class="font-mono text-xs text-indigo uppercase tracking-widest mb-3">About</p>
+      <h2 class="font-display font-semibold text-3xl md:text-4xl text-ink leading-tight">
+        Two disciplines,<br/>one developer.
+      </h2>
+    </div>
+    <div class="reveal reveal-delay-1 space-y-5 text-mute leading-relaxed text-base md:text-lg">
+      <p>
+        I'm a Computer Science student at <span class="text-ink">Technocrats Institute of Technology</span>,
+        currently in my 6th semester. Somewhere between coursework and side projects, I found that I care about
+        two very different layers of software: the part the player feels, and the part that keeps everything
+        running underneath.
+      </p>
+      <p>
+        On the game side, I build with <span class="text-ink">Godot</span> and <span class="text-ink">GDScript</span>
+        — currently deep in a Metroidvania platformer, working through movement systems, combat, and exploration
+        design. On the backend side, I build APIs and services with <span class="text-ink">Django</span> and
+        <span class="text-ink"> Node.js</span>, and I'm slowly getting more comfortable with the systems
+        programming and DevOps layer underneath it all.
+      </p>
+      <p>
+        I'm not pretending to be a senior engineer. I'm a student who ships small, breaks things on purpose to
+        understand them, and is currently leveling up in <span class="text-amber">shader programming</span> and
+        <span class="text-amber"> Kubernetes</span> alongside the fundamentals — DSA, operating systems, and
+        database design. This site is an honest snapshot of that progress, not a highlight reel.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SKILLS ============ -->
+<section id="skills" class="py-24 md:py-32 border-t border-line bg-surface/40">
+  <div class="max-w-6xl mx-auto px-6 md:px-8">
+    <div class="reveal mb-14 max-w-2xl">
+      <p class="font-mono text-xs text-indigo uppercase tracking-widest mb-3">Skill Tree</p>
+      <h2 class="font-display font-semibold text-3xl md:text-4xl text-ink leading-tight mb-4">Ability Status</h2>
+      <p class="text-mute leading-relaxed">
+        Borrowed straight from the genre I build in — some abilities are unlocked, some are still on the
+        upgrade path. Shown honestly, the way a save file would.
+      </p>
+    </div>
+
+    <!-- Expertise vs Growing summary -->
+    <div class="reveal reveal-delay-1 grid sm:grid-cols-2 gap-4 mb-14">
+      <div class="rounded-xl border border-emerald/25 bg-emerald/5 p-6">
+        <div class="flex items-center gap-2 mb-4 font-mono text-xs uppercase tracking-widest text-emerald">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+          Unlocked / Comfortable
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="px-3 py-1.5 rounded-md bg-surface2 border border-line text-sm font-mono text-ink">Godot</span>
+          <span class="px-3 py-1.5 rounded-md bg-surface2 border border-line text-sm font-mono text-ink">GDScript</span>
+          <span class="px-3 py-1.5 rounded-md bg-surface2 border border-line text-sm font-mono text-ink">Django</span>
+          <span class="px-3 py-1.5 rounded-md bg-surface2 border border-line text-sm font-mono text-ink">Node.js</span>
+          <span class="px-3 py-1.5 rounded-md bg-surface2 border border-line text-sm font-mono text-ink">OOP</span>
+          <span class="px-3 py-1.5 rounded-md bg-surface2 border border-line text-sm font-mono text-ink">Git / GitHub</span>
+        </div>
+      </div>
+      <div class="rounded-xl border border-amber/25 bg-amber/5 p-6">
+        <div class="flex items-center gap-2 mb-4 font-mono text-xs uppercase tracking-widest text-amber">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          In Progress / Growing
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="px-3 py-1.5 rounded-md bg-surface2 border border-line text-sm font-mono text-ink">Shaders</span>
+          <span class="px-3 py-1.5 rounded-md bg-surface2 border border-line text-sm font-mono text-ink">Kubernetes</span>
+          <span class="px-3 py-1.5 rounded-md bg-surface2 border border-line text-sm font-mono text-ink">Advanced DSA</span>
+          <span class="px-3 py-1.5 rounded-md bg-surface2 border border-line text-sm font-mono text-ink">SQL</span>
+          <span class="px-3 py-1.5 rounded-md bg-surface2 border border-line text-sm font-mono text-ink">CI/CD</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- category cards with proficiency bars -->
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5" id="skillGrid">
+
+      <div class="reveal card-hover bg-surface border border-line rounded-xl p-6">
+        <h3 class="font-display font-medium text-ink mb-1">Game Development</h3>
+        <p class="text-xs text-mute font-mono mb-5">player-facing systems</p>
+        <ul class="space-y-3">
+          <li><div class="flex justify-between text-sm mb-1"><span class="text-ink">Godot Engine</span><span class="text-mute font-mono text-xs">Comfortable</span></div><div class="h-1.5 bg-surface2 rounded-full overflow-hidden"><div class="xp-fill h-full bg-emerald rounded-full" data-w="80%" style="width:0"></div></div></li>
+          <li><div class="flex justify-between text-sm mb-1"><span class="text-ink">GDScript</span><span class="text-mute font-mono text-xs">Comfortable</span></div><div class="h-1.5 bg-surface2 rounded-full overflow-hidden"><div class="xp-fill h-full bg-emerald rounded-full" data-w="78%" style="width:0"></div></div></li>
+          <li><div class="flex justify-between text-sm mb-1"><span class="text-ink">Gameplay Systems</span><span class="text-mute font-mono text-xs">Building</span></div><div class="h-1.5 bg-surface2 rounded-full overflow-hidden"><div class="xp-fill h-full bg-indigo rounded-full" data-w="60%" style="width:0"></div></div></li>
+          <li><div class="flex justify-between text-sm mb-1"><span class="text-ink">Shaders</span><span class="text-mute font-mono text-xs">Learning</span></div><div class="h-1.5 bg-surface2 rounded-full overflow-hidden"><div class="xp-fill h-full bg-amber rounded-full" data-w="25%" style="width:0"></div></div></li>
+        </ul>
+      </div>
+
+      <div class="reveal reveal-delay-1 card-hover bg-surface border border-line rounded-xl p-6">
+        <h3 class="font-display font-medium text-ink mb-1">Backend</h3>
+        <p class="text-xs text-mute font-mono mb-5">the engine room</p>
+        <ul class="space-y-3">
+          <li><div class="flex justify-between text-sm mb-1"><span class="text-ink">Django</span><span class="text-mute font-mono text-xs">Comfortable</span></div><div class="h-1.5 bg-surface2 rounded-full overflow-hidden"><div class="xp-fill h-full bg-emerald rounded-full" data-w="75%" style="width:0"></div></div></li>
+          <li><div class="flex justify-between text-sm mb-1"><span class="text-ink">Node.js / Express</span><span class="text-mute font-mono text-xs">Comfortable</span></div><div class="h-1.5 bg-surface2 rounded-full overflow-hidden"><div class="xp-fill h-full bg-emerald rounded-full" data-w="72%" style="width:0"></div></div></li>
+          <li><div class="flex justify-between text-sm mb-1"><span class="text-ink">REST APIs</span><span class="text-mute font-mono text-xs">Comfortable</span></div><div class="h-1.5 bg-surface2 rounded-full overflow-hidden"><div class="xp-fill h-full bg-emerald rounded-full" data-w="70%" style="width:0"></div></div></li>
+          <li><div class="flex justify-between text-sm mb-1"><span class="text-ink">Auth Systems</span><span class="text-mute font-mono text-xs">Building</span></div><div class="h-1.5 bg-surface2 rounded-full overflow-hidden"><div class="xp-fill h-full bg-indigo rounded-full" data-w="55%" style="width:0"></div></div></li>
+        </ul>
+      </div>
+
+      <div class="reveal reveal-delay-2 card-hover bg-surface border border-line rounded-xl p-6">
+        <h3 class="font-display font-medium text-ink mb-1">Programming</h3>
+        <p class="text-xs text-mute font-mono mb-5">core languages</p>
+        <ul class="space-y-3">
+          <li><div class="flex justify-between text-sm mb-1"><span class="text-ink">Python</span><span class="text-mute font-mono text-xs">Comfortable</span></div><div class="h-1.5 bg-surface2 rounded-full overflow-hidden"><div class="xp-fill h-full bg-emerald rounded-full" data-w="78%" style="width:0"></div></div></li>
+          <li><div class="flex justify-between text-sm mb-1"><span class="text-ink">JavaScript</span><span class="text-mute font-mono text-xs">Comfortable</span></div><div class="h-1.5 bg-surface2 rounded-full overflow-hidden"><div class="xp-fill h-full bg-emerald rounded-full" data-w="72%" style="width:0"></div></div></li>
+          <li><div class="flex justify-between text-sm mb-1"><span class="text-ink">C++</span><span class="text-mute font-mono text-xs">Building</span></div><div class="h-1.5 bg-surface2 rounded-full overflow-hidden"><div class="xp-fill h-full bg-indigo rounded-full" data-w="50%" style="width:0"></div></div></li>
+          <li><div class="flex justify-between text-sm mb-1"><span class="text-ink">OOP</span><span class="text-mute font-mono text-xs">Solid</span></div><div class="h-1.5 bg-surface2 rounded-full overflow-hidden"><div class="xp-fill h-full bg-emerald rounded-full" data-w="82%" style="width:0"></div></div></li>
+        </ul>
+      </div>
+
+      <div class="reveal card-hover bg-surface border border-line rounded-xl p-6">
+        <h3 class="font-display font-medium text-ink mb-1">Infrastructure</h3>
+        <p class="text-xs text-mute font-mono mb-5">deployment &amp; systems</p>
+        <ul class="space-y-3">
+          <li><div class="flex justify-between text-sm mb-1"><span class="text-ink">Docker</span><span class="text-mute font-mono text-xs">Building</span></div><div class="h-1.5 bg-surface2 rounded-full overflow-hidden"><div class="xp-fill h-full bg-indigo rounded-full" data-w="55%" style="width:0"></div></div></li>
+          <li><div class="flex justify-between text-sm mb-1"><span class="text-ink">Linux</span><span class="text-mute font-mono text-xs">Comfortable</span></div><div class="h-1.5 bg-surface2 rounded-full overflow-hidden"><div class="xp-fill h-full bg-emerald rounded-full" data-w="65%" style="width:0"></div></div></li>
+          <li><div class="flex justify-between text-sm mb-1"><span class="text-ink">Git / GitHub</span><span class="text-mute font-mono text-xs">Comfortable</span></div><div class="h-1.5 bg-surface2 rounded-full overflow-hidden"><div class="xp-fill h-full bg-emerald rounded-full" data-w="80%" style="width:0"></div></div></li>
+          <li><div class="flex justify-between text-sm mb-1"><span class="text-ink">Kubernetes</span><span class="text-mute font-mono text-xs">Learning</span></div><div class="h-1.5 bg-surface2 rounded-full overflow-hidden"><div class="xp-fill h-full bg-amber rounded-full" data-w="20%" style="width:0"></div></div></li>
+        </ul>
+      </div>
+
+      <div class="reveal reveal-delay-1 card-hover bg-surface border border-line rounded-xl p-6">
+        <h3 class="font-display font-medium text-ink mb-1">CS Fundamentals</h3>
+        <p class="text-xs text-mute font-mono mb-5">the theory underneath</p>
+        <ul class="space-y-3">
+          <li><div class="flex justify-between text-sm mb-1"><span class="text-ink">OOP Concepts</span><span class="text-mute font-mono text-xs">Solid</span></div><div class="h-1.5 bg-surface2 rounded-full overflow-hidden"><div class="xp-fill h-full bg-emerald rounded-full" data-w="82%" style="width:0"></div></div></li>
+          <li><div class="flex justify-between text-sm mb-1"><span class="text-ink">Operating Systems</span><span class="text-mute font-mono text-xs">Building</span></div><div class="h-1.5 bg-surface2 rounded-full overflow-hidden"><div class="xp-fill h-full bg-indigo rounded-full" data-w="58%" style="width:0"></div></div></li>
+          <li><div class="flex justify-between text-sm mb-1"><span class="text-ink">DBMS</span><span class="text-mute font-mono text-xs">Building</span></div><div class="h-1.5 bg-surface2 rounded-full overflow-hidden"><div class="xp-fill h-full bg-indigo rounded-full" data-w="55%" style="width:0"></div></div></li>
+          <li><div class="flex justify-between text-sm mb-1"><span class="text-ink">DSA</span><span class="text-mute font-mono text-xs">Improving</span></div><div class="h-1.5 bg-surface2 rounded-full overflow-hidden"><div class="xp-fill h-full bg-amber rounded-full" data-w="45%" style="width:0"></div></div></li>
+        </ul>
+      </div>
+
+      <div class="reveal reveal-delay-2 card-hover bg-gradient-to-br from-indigo/10 to-transparent border border-indigo/25 rounded-xl p-6 flex flex-col justify-center text-center">
+        <p class="font-mono text-xs text-indigo uppercase tracking-widest mb-2">Next Unlock</p>
+        <p class="font-display text-lg text-ink mb-2">Shader Programming</p>
+        <p class="text-sm text-mute">Currently studying fragment shaders in Godot to bring more visual identity to the Metroidvania project.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROJECTS ============ -->
+<section id="projects" class="py-24 md:py-32 border-t border-line">
+  <div class="max-w-6xl mx-auto px-6 md:px-8">
+    <div class="reveal mb-14 max-w-2xl">
+      <p class="font-mono text-xs text-indigo uppercase tracking-widest mb-3">Projects</p>
+      <h2 class="font-display font-semibold text-3xl md:text-4xl text-ink leading-tight mb-4">What I'm Building</h2>
+      <p class="text-mute leading-relaxed">
+        Two active projects, one on each side of the stack. Both still under construction — that's the point.
+      </p>
+    </div>
+
+    <!-- Project 1: Metroidvania -->
+    <div class="reveal grid lg:grid-cols-2 gap-0 rounded-2xl overflow-hidden border border-line bg-surface mb-8 card-hover">
+      <div class="relative aspect-video lg:aspect-auto bg-gradient-to-br from-[#1a2236] to-[#0d1119] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 grid-backdrop opacity-60"></div>
+        <div class="relative z-10 text-center px-8">
+          <svg class="w-16 h-16 mx-auto mb-4 text-indigo/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 9l3-3 3 3M9 15l3 3 3-3M3 12h18" /></svg>
+          <p class="font-mono text-xs text-mute">screenshots &amp; gameplay clips coming as the build progresses</p>
+        </div>
+        <span class="absolute top-4 left-4 font-mono text-[11px] px-2.5 py-1 rounded-full bg-base/80 border border-emerald/30 text-emerald">In Development</span>
+      </div>
+      <div class="p-8 md:p-10 flex flex-col justify-center">
+        <h3 class="font-display font-semibold text-2xl text-ink mb-2">Metroidvania Platformer</h3>
+        <div class="flex flex-wrap gap-2 mb-5">
+          <span class="font-mono text-xs px-2.5 py-1 rounded bg-surface2 border border-line text-mute">Godot</span>
+          <span class="font-mono text-xs px-2.5 py-1 rounded bg-surface2 border border-line text-mute">GDScript</span>
+          <span class="font-mono text-xs px-2.5 py-1 rounded bg-surface2 border border-line text-mute">2D</span>
+        </div>
+        <p class="text-mute leading-relaxed mb-6">
+          An indie-style Metroidvania currently under active development. The focus right now is on getting
+          player movement to feel right, building out combat mechanics, designing exploration systems with
+          gated progression, and structuring the underlying game architecture so it can scale as the world grows.
+        </p>
+        <ul class="space-y-2 mb-7 text-sm text-mute">
+          <li class="flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-indigo"></span> Core movement &amp; jump system — done</li>
+          <li class="flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-amber"></span> Combat &amp; hit-feedback — in progress</li>
+          <li class="flex items-center gap-2"><span class="w-1 h-1 rounded-full text-mute bg-line"></span> Ability-gated exploration — planned</li>
+        </ul>
+        <div class="flex gap-4">
+          <a href="https://github.com/" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-sm font-mono text-ink border border-line px-4 py-2.5 rounded hover:border-indigo/50 hover:text-indigo transition-colors">
+            View on GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 2: Movie Booking Backend -->
+    <div class="reveal reveal-delay-1 grid lg:grid-cols-2 gap-0 rounded-2xl overflow-hidden border border-line bg-surface mb-8 card-hover">
+      <div class="p-8 md:p-10 flex flex-col justify-center order-2 lg:order-1">
+        <h3 class="font-display font-semibold text-2xl text-ink mb-2">Movie Booking Backend System</h3>
+        <div class="flex flex-wrap gap-2 mb-5">
+          <span class="font-mono text-xs px-2.5 py-1 rounded bg-surface2 border border-line text-mute">Node.js</span>
+          <span class="font-mono text-xs px-2.5 py-1 rounded bg-surface2 border border-line text-mute">Express</span>
+          <span class="font-mono text-xs px-2.5 py-1 rounded bg-surface2 border border-line text-mute">SQL</span>
+        </div>
+        <p class="text-mute leading-relaxed mb-6">
+          A backend system for a movie booking platform, currently under development. The work is centered on
+          API design for showtimes and seat selection, building a proper authentication flow, structuring the
+          relational database, and getting the overall backend architecture into a shape that's clean to extend.
+        </p>
+        <ul class="space-y-2 mb-7 text-sm text-mute">
+          <li class="flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-indigo"></span> Auth &amp; user accounts — done</li>
+          <li class="flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-amber"></span> Seat booking &amp; concurrency handling — in progress</li>
+          <li class="flex items-center gap-2"><span class="w-1 h-1 rounded-full text-mute bg-line"></span> Payments &amp; admin dashboard — planned</li>
+        </ul>
+        <div class="flex gap-4">
+          <a href="https://github.com/" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-sm font-mono text-ink border border-line px-4 py-2.5 rounded hover:border-indigo/50 hover:text-indigo transition-colors">
+            View on GitHub
+          </a>
+        </div>
+      </div>
+      <div class="relative aspect-video lg:aspect-auto bg-gradient-to-br from-[#16201c] to-[#0d1119] flex items-center justify-center overflow-hidden order-1 lg:order-2">
+        <div class="absolute inset-0 grid-backdrop opacity-60"></div>
+        <div class="relative z-10 w-full max-w-xs px-6 font-mono text-[11px] text-mute space-y-2">
+          <p class="text-emerald">POST /api/bookings/create</p>
+          <p class="text-mute">→ 201 Created</p>
+          <p class="text-amber">GET /api/showtimes/:id/seats</p>
+          <p class="text-mute">→ 200 OK</p>
+          <p class="text-indigo">POST /api/auth/login</p>
+          <p class="text-mute">→ 200 OK · token issued</p>
+        </div>
+        <span class="absolute top-4 right-4 font-mono text-[11px] px-2.5 py-1 rounded-full bg-base/80 border border-emerald/30 text-emerald">In Development</span>
+      </div>
+    </div>
+
+    <!-- Future projects placeholders -->
+    <div class="reveal reveal-delay-2 mt-10">
+      <p class="font-mono text-xs text-mute uppercase tracking-widest mb-5">Up Next</p>
+      <div class="grid sm:grid-cols-3 gap-5">
+        <div class="border border-dashed border-line rounded-xl p-6 hover:border-amber/40 transition-colors">
+          <div class="w-9 h-9 rounded-lg bg-amber/10 border border-amber/20 flex items-center justify-center mb-4">
+            <svg class="w-4 h-4 text-amber" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+          </div>
+          <h4 class="font-display text-ink mb-1">Shader Experiments</h4>
+          <p class="text-sm text-mute">A sandbox repo for fragment shader studies in Godot.</p>
+        </div>
+        <div class="border border-dashed border-line rounded-xl p-6 hover:border-indigo/40 transition-colors">
+          <div class="w-9 h-9 rounded-lg bg-indigo/10 border border-indigo/20 flex items-center justify-center mb-4">
+            <svg class="w-4 h-4 text-indigo" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+          </div>
+          <h4 class="font-display text-ink mb-1">C++ Systems Project</h4>
+          <p class="text-sm text-mute">A small systems-level project to get closer to the metal.</p>
+        </div>
+        <div class="border border-dashed border-line rounded-xl p-6 hover:border-emerald/40 transition-colors">
+          <div class="w-9 h-9 rounded-lg bg-emerald/10 border border-emerald/20 flex items-center justify-center mb-4">
+            <svg class="w-4 h-4 text-emerald" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7" /></svg>
+          </div>
+          <h4 class="font-display text-ink mb-1">DevOps Pipeline</h4>
+          <p class="text-sm text-mute">Containerizing a project end-to-end with Docker and a CI/CD flow.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ JOURNEY / TIMELINE ============ -->
+<section id="journey" class="py-24 md:py-32 border-t border-line bg-surface/40">
+  <div class="max-w-5xl mx-auto px-6 md:px-8">
+    <div class="reveal mb-16 max-w-2xl">
+      <p class="font-mono text-xs text-indigo uppercase tracking-widest mb-3">Development Journey</p>
+      <h2 class="font-display font-semibold text-3xl md:text-4xl text-ink leading-tight">Where I Am, Where I'm Headed</h2>
+    </div>
+
+    <div class="relative pl-10">
+      <div class="absolute left-[7px] top-2 bottom-2 w-[2px] timeline-line"></div>
+
+      <div class="reveal relative pb-14">
+        <div class="absolute left-[-34px] top-1 w-4 h-4 rounded-full bg-emerald ring-4 ring-emerald/15"></div>
+        <p class="font-mono text-xs text-emerald uppercase tracking-widest mb-2">Now</p>
+        <h3 class="font-display text-xl text-ink mb-2">Building games with Godot, developing backend applications</h3>
+        <p class="text-mute leading-relaxed max-w-2xl">
+          Splitting focused time between the Metroidvania's gameplay systems and the movie booking backend —
+          treating both as real, shippable projects rather than tutorials.
+        </p>
+      </div>
+
+      <div class="reveal reveal-delay-1 relative pb-14">
+        <div class="absolute left-[-34px] top-1 w-4 h-4 rounded-full bg-amber ring-4 ring-amber/15"></div>
+        <p class="font-mono text-xs text-amber uppercase tracking-widest mb-2">Learning</p>
+        <h3 class="font-display text-xl text-ink mb-2">Shaders, Kubernetes, advanced DevOps, advanced DSA</h3>
+        <p class="text-mute leading-relaxed max-w-2xl">
+          The next layer of depth on both sides — visual programming for games, and the orchestration and
+          algorithmic foundations for backend systems that actually scale.
+        </p>
+      </div>
+
+      <div class="reveal reveal-delay-2 relative">
+        <div class="absolute left-[-34px] top-1 w-4 h-4 rounded-full bg-line ring-4 ring-line/20"></div>
+        <p class="font-mono text-xs text-mute uppercase tracking-widest mb-2">Future Goals</p>
+        <h3 class="font-display text-xl text-ink mb-2">Game systems programming, graphics programming, large-scale backend systems</h3>
+        <p class="text-mute leading-relaxed max-w-2xl">
+          Long-term, I want to go deeper into engine-level systems work on the game side, and into distributed,
+          large-scale backend architecture on the other.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TECH STACK ============ -->
+<section id="stack" class="py-24 md:py-32 border-t border-line">
+  <div class="max-w-6xl mx-auto px-6 md:px-8">
+    <div class="reveal mb-14 max-w-2xl">
+      <p class="font-mono text-xs text-indigo uppercase tracking-widest mb-3">Technology Stack</p>
+      <h2 class="font-display font-semibold text-3xl md:text-4xl text-ink leading-tight">How It Fits Together</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="reveal bg-surface border border-line rounded-xl p-7">
+        <p class="font-mono text-xs text-emerald uppercase tracking-widest mb-5">Game Development</p>
+        <div class="flex items-center flex-wrap gap-3 font-mono text-sm">
+          <span class="px-3 py-2 rounded-lg bg-surface2 border border-line text-ink">Godot</span>
+          <svg class="w-4 h-4 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+          <span class="px-3 py-2 rounded-lg bg-surface2 border border-line text-ink">GDScript</span>
+          <svg class="w-4 h-4 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+          <span class="px-3 py-2 rounded-lg bg-surface2 border border-line text-mute">C++</span>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-1 bg-surface border border-line rounded-xl p-7">
+        <p class="font-mono text-xs text-indigo uppercase tracking-widest mb-5">Backend</p>
+        <div class="flex items-center flex-wrap gap-3 font-mono text-sm">
+          <span class="px-3 py-2 rounded-lg bg-surface2 border border-line text-ink">Node.js</span>
+          <svg class="w-4 h-4 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+          <span class="px-3 py-2 rounded-lg bg-surface2 border border-line text-ink">Django</span>
+          <svg class="w-4 h-4 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+          <span class="px-3 py-2 rounded-lg bg-surface2 border border-line text-mute">SQL</span>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-2 bg-surface border border-line rounded-xl p-7">
+        <p class="font-mono text-xs text-amber uppercase tracking-widest mb-5">Infrastructure</p>
+        <div class="flex items-center flex-wrap gap-3 font-mono text-sm">
+          <span class="px-3 py-2 rounded-lg bg-surface2 border border-line text-ink">Docker</span>
+          <svg class="w-4 h-4 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+          <span class="px-3 py-2 rounded-lg bg-surface2 border border-line text-ink">Linux</span>
+          <svg class="w-4 h-4 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+          <span class="px-3 py-2 rounded-lg bg-surface2 border border-line text-mute">Kubernetes</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DEVLOG / BLOG ============ -->
+<section id="devlog" class="py-24 md:py-32 border-t border-line bg-surface/40">
+  <div class="max-w-6xl mx-auto px-6 md:px-8">
+    <div class="reveal mb-14 max-w-2xl">
+      <p class="font-mono text-xs text-indigo uppercase tracking-widest mb-3">Devlog</p>
+      <h2 class="font-display font-semibold text-3xl md:text-4xl text-ink leading-tight mb-4">Notes From the Build</h2>
+      <p class="text-mute leading-relaxed">Short write-ups as I work through problems — equal parts learning log and public notebook.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <a href="#" class="reveal card-hover block bg-surface border border-line rounded-xl p-6">
+        <p class="font-mono text-xs text-emerald mb-3">GAME DEV</p>
+        <h3 class="font-display text-ink text-lg mb-2">Building a Metroidvania: Movement First</h3>
+        <p class="text-sm text-mute leading-relaxed">Why I started with jump-feel and coyote time before touching combat.</p>
+      </a>
+      <a href="#" class="reveal reveal-delay-1 card-hover block bg-surface border border-line rounded-xl p-6">
+        <p class="font-mono text-xs text-emerald mb-3">GAME DEV</p>
+        <h3 class="font-display text-ink text-lg mb-2">Learning Godot Coming From Tutorials</h3>
+        <p class="text-sm text-mute leading-relaxed">What clicked once I stopped following tutorials and started breaking things.</p>
+      </a>
+      <a href="#" class="reveal reveal-delay-2 card-hover block bg-surface border border-line rounded-xl p-6">
+        <p class="font-mono text-xs text-amber mb-3">GRAPHICS</p>
+        <h3 class="font-display text-ink text-lg mb-2">My First Shader Experiments</h3>
+        <p class="text-sm text-mute leading-relaxed">Fumbling through fragment shaders to get a simple outline effect working.</p>
+      </a>
+      <a href="#" class="reveal card-hover block bg-surface border border-line rounded-xl p-6">
+        <p class="font-mono text-xs text-indigo mb-3">BACKEND</p>
+        <h3 class="font-display text-ink text-lg mb-2">Designing the Booking API</h3>
+        <p class="text-sm text-mute leading-relaxed">Notes on modeling showtimes, seats, and avoiding double-bookings.</p>
+      </a>
+      <a href="#" class="reveal reveal-delay-1 card-hover block bg-surface border border-line rounded-xl p-6">
+        <p class="font-mono text-xs text-amber mb-3">DEVOPS</p>
+        <h3 class="font-display text-ink text-lg mb-2">Docker and DevOps Journey, Part 1</h3>
+        <p class="text-sm text-mute leading-relaxed">Containerizing my first backend project and what broke immediately.</p>
+      </a>
+      <a href="#" class="reveal reveal-delay-2 card-hover block bg-surface border border-line rounded-xl p-6">
+        <p class="font-mono text-xs text-indigo mb-3">PROGRAMMING</p>
+        <h3 class="font-display text-ink text-lg mb-2">Relearning C++ With Intent</h3>
+        <p class="text-sm text-mute leading-relaxed">Going back to C++ fundamentals with a systems-programming goal in mind.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact" class="py-24 md:py-32 border-t border-line relative overflow-hidden">
+  <div class="absolute -bottom-32 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-indigo/10 rounded-full blur-[120px] pointer-events-none"></div>
+  <div class="relative max-w-5xl mx-auto px-6 md:px-8 grid md:grid-cols-2 gap-14">
+    <div class="reveal">
+      <p class="font-mono text-xs text-indigo uppercase tracking-widest mb-3">Contact</p>
+      <h2 class="font-display font-semibold text-3xl md:text-4xl text-ink leading-tight mb-5">Let's Build Something</h2>
+      <p class="text-mute leading-relaxed mb-8 max-w-md">
+        Open to internships, collaborations, and conversations with indie studios or backend teams.
+        If something here resonated, reach out.
+      </p>
+      <div class="space-y-4 font-mono text-sm">
+        <a href="https://github.com/" target="_blank" rel="noopener" class="flex items-center gap-3 text-mute hover:text-ink transition-colors group">
+          <span class="w-9 h-9 rounded-lg border border-line flex items-center justify-center group-hover:border-indigo/50 group-hover:text-indigo transition-colors">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.69 1.25 3.34.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.04 11.04 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.24 2.76.12 3.05.74.8 1.18 1.83 1.18 3.09 0 4.42-2.69 5.39-5.26 5.68.42.36.78 1.08.78 2.18 0 1.57-.01 2.84-.01 3.23 0 .31.21.66.79.55C20.71 21.38 24 17.07 24 12c0-6.27-5.23-11.5-12-11.5Z"/></svg>
+          </span>
+          github.com/shubhamsingh
+        </a>
+        <a href="https://linkedin.com/" target="_blank" rel="noopener" class="flex items-center gap-3 text-mute hover:text-ink transition-colors group">
+          <span class="w-9 h-9 rounded-lg border border-line flex items-center justify-center group-hover:border-indigo/50 group-hover:text-indigo transition-colors">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.15 1.45-2.15 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.07 2.07 0 11.01-4.14 2.07 2.07 0 01-.01 4.14zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+          </span>
+          linkedin.com/in/shubhamsingh
+        </a>
+        <a href="mailto:shubham.singh@example.com" class="flex items-center gap-3 text-mute hover:text-ink transition-colors group">
+          <span class="w-9 h-9 rounded-lg border border-line flex items-center justify-center group-hover:border-indigo/50 group-hover:text-indigo transition-colors">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+          </span>
+          shubham.singh@example.com
+        </a>
+      </div>
+    </div>
+
+    <form class="reveal reveal-delay-1 bg-surface border border-line rounded-xl p-7 space-y-5" id="contactForm">
+      <div>
+        <label for="name" class="block text-xs font-mono text-mute mb-2 uppercase tracking-widest">Name</label>
+        <input type="text" id="name" name="name" required class="w-full bg-surface2 border border-line rounded-lg px-4 py-3 text-sm text-ink focus:border-indigo/60 transition-colors" placeholder="Your name">
+      </div>
+      <div>
+        <label for="email" class="block text-xs font-mono text-mute mb-2 uppercase tracking-widest">Email</label>
+        <input type="email" id="email" name="email" required class="w-full bg-surface2 border border-line rounded-lg px-4 py-3 text-sm text-ink focus:border-indigo/60 transition-colors" placeholder="you@example.com">
+      </div>
+      <div>
+        <label for="message" class="block text-xs font-mono text-mute mb-2 uppercase tracking-widest">Message</label>
+        <textarea id="message" name="message" rows="4" required class="w-full bg-surface2 border border-line rounded-lg px-4 py-3 text-sm text-ink focus:border-indigo/60 transition-colors resize-none" placeholder="What do you want to build?"></textarea>
+      </div>
+      <button type="submit" class="w-full bg-indigo text-base font-mono text-sm font-medium py-3 rounded hover:bg-indigo-dim transition-colors">
+        Send Message
+      </button>
+      <p id="formStatus" class="text-center text-xs font-mono text-emerald hidden">Message ready — connect a backend to actually send this.</p>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="border-t border-line py-10">
+  <div class="max-w-6xl mx-auto px-6 md:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <p class="font-mono text-xs text-mute">© 2026 Shubham Singh. Built while learning.</p>
+    <p class="font-mono text-xs text-mute">Godot · Django · Node.js · React</p>
+  </div>
+</footer>
+
+<script>
+  // Mobile menu toggle
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const iconOpen = document.getElementById('menuIconOpen');
+  const iconClose = document.getElementById('menuIconClose');
+
+  menuBtn.addEventListener('click', () => {
+    const isHidden = mobileMenu.classList.contains('hidden');
+    mobileMenu.classList.toggle('hidden');
+    iconOpen.classList.toggle('hidden');
+    iconClose.classList.toggle('hidden');
+    menuBtn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+  });
+
+  document.querySelectorAll('.mobile-link').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+      iconOpen.classList.remove('hidden');
+      iconClose.classList.add('hidden');
+      menuBtn.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // Skill bar fill on view
+  const skillSection = document.getElementById('skills');
+  const xpBars = document.querySelectorAll('.xp-fill');
+  const xpObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        xpBars.forEach(bar => {
+          bar.style.width = bar.getAttribute('data-w');
+        });
+        xpObserver.disconnect();
+      }
+    });
+  }, { threshold: 0.2 });
+  if (skillSection) xpObserver.observe(skillSection);
+
+  // Contact form (no backend — just a friendly confirmation state)
+  const form = document.getElementById('contactForm');
+  const formStatus = document.getElementById('formStatus');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    formStatus.classList.remove('hidden');
+    form.reset();
+  });
+</script>
+
+</body>
+</html>
